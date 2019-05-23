@@ -15,6 +15,7 @@ namespace Demo.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        //demo
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
