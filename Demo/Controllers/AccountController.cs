@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Demo.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Demo.Models;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Demo.Controllers
 {
@@ -482,5 +485,93 @@ namespace Demo.Controllers
             }
         }
         #endregion
+    }
+}
+
+
+namespace Demo  
+{
+    /// <summary>
+    /// Summary description for MySeleniumTests
+    /// </summary>
+    [TestClass]
+    public class MySeleniumTests
+    {
+        private TestContext testContextInstance;
+        private IWebDriver driver;
+        private string appURL;
+
+        public MySeleniumTests()
+        {
+        }
+
+        [TestMethod]
+        [TestCategory("Chrome")]
+        public void TheBingSearchTest()
+        {
+            driver.Navigate().GoToUrl(appURL + "/");
+            driver.FindElement(By.Id("sb_form_q")).SendKeys("Azure Pipelines");
+            driver.FindElement(By.Id("sb_form_go")).Click();
+            driver.FindElement(By.XPath("//ol[@id='b_results']/li/h2/a/strong[3]")).Click();
+            Assert.IsFalse(driver.Title.Contains("Azure Pipelines"), "Verified title of the page");
+        }
+        [TestMethod]
+        public void EqualZeroOrTwo()
+        {
+            // Arrange
+            double beginningBalance = 11.99;
+            double debitAmount = -100.00;
+            //BankAccount account = new BankAccount("Mr. Bryan Walton", beginningBalance);
+
+            // Act
+            // account.Debit(debitAmount);
+            Assert.AreEqual(beginningBalance + debitAmount, -88.01);
+            // Assert is handled by the ExpectedException attribute on the test method.
+        }
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
+        [TestInitialize()]
+        public void SetupTest()
+        {
+            appURL = "http://www.bing.com/";
+
+            string browser = "Chrome";
+            switch (browser)
+            {
+                case "Chrome":
+                    driver = new ChromeDriver();
+                    break;
+                case "Firefox":
+                    driver = new FirefoxDriver();
+                    break;
+                case "IE":
+                    driver = new InternetExplorerDriver();
+                    break;
+                default:
+                    driver = new ChromeDriver();
+                    break;
+            }
+
+        }
+
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            driver.Quit();
+        }
     }
 }
