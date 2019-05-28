@@ -33,9 +33,3 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: drop
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '--configuration $(debug) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
